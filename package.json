@@ -1,6 +1,6 @@
 {
   "name": "siege-loadout-prototype",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "type": "module",
   "description": "Local-only loadout prototype with fictional compatibility fixtures",

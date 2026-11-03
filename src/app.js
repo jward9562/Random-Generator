@@ -1,9 +1,8 @@
 import { mockDatabase as database } from './data/mock-database.js';
 import { ATTACHMENT_SLOTS, availableOperators } from './domain/compatibility.js';
-import { LocalRandomProvider } from './random/local-provider.js';
+import { requestLoadout } from './ui/remote-generator.js';
 import { createController } from './ui/controller.js';
 
-const provider = new LocalRandomProvider();
 const $ = id => document.getElementById(id);
 const sideName = side => side === 'attack' ? 'Attack' : 'Defense';
 function element(tag, className, text) {
@@ -32,6 +31,9 @@ function weaponCard(number, label, weapon) {
 }
 let displayedResult;
 function render(state) {
+  $('random-source').textContent = state.result?.randomness?.source === 'RANDOM.ORG'
+    ? 'Displayed loadout: RANDOM.ORG true randomness'
+    : state.result ? 'Displayed loadout: fixed choices · no random bits needed' : 'RANDOM.ORG · not used yet';
   document.body.dataset.side = state.selectedSide;
   for (const side of ['attack', 'defense']) {
     $(side).setAttribute('aria-pressed', String(side === state.selectedSide));
@@ -57,11 +59,9 @@ function render(state) {
 }
 let storage;
 try { storage = window.localStorage; } catch { /* Optional browser persistence. */ }
-const controller = createController({ database, provider, storage, onChange: render });
+const controller = createController({ generate: requestLoadout, storage, onChange: render });
 $('attack').addEventListener('click', () => controller.selectSide('attack'));
 $('defense').addEventListener('click', () => controller.selectSide('defense'));
 $('generate').addEventListener('click', () => controller.generateAll());
-$('random-source').textContent = provider.label;
 $('data-version').textContent = `Data: ${database.dataVersion.id} / Patch: unverified`;
 render(controller.state);
-void controller.generateAll();

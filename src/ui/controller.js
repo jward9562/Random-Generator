@@ -1,9 +1,8 @@
-import { generateLoadout } from '../domain/generate-loadout.js';
 import { SIDES } from '../domain/compatibility.js';
 
 export const SIDE_STORAGE_KEY = 'siege-loadout.side';
 
-export function createController({ database, provider, storage, onChange = () => {}, generate = generateLoadout }) {
+export function createController({ generate, storage, onChange = () => {} }) {
   let selectedSide = 'attack';
   try {
     const saved = storage?.getItem(SIDE_STORAGE_KEY);
@@ -23,7 +22,7 @@ export function createController({ database, provider, storage, onChange = () =>
       if (state.busy) return;
       publish({ busy: true, error: null });
       try {
-        const result = await generate(database, state.selectedSide, provider);
+        const result = await generate(state.selectedSide);
         publish({ result, busy: false });
       } catch (error) {
         publish({ busy: false, error: error instanceof Error ? error.message : 'Generation failed.' });

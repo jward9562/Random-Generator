@@ -48,40 +48,104 @@ currently assumes attachment slots are independent once operator and weapon are
 known. If verified game data introduces cross-slot exclusions or weapons usable
 in multiple equipment slots, extend the schema and tests before entering those cases.
 
-## Random-provider boundary
+## Runtime boundary (milestone 2)
 
-Providers implement `async nextUint32()` and return an integer in `[0, 2^32)` or
-throw. Uniformity of those words is the provider's responsibility. Production UI
-uses `LocalRandomProvider`, backed by the browser's `crypto.getRandomValues`,
-explicitly labeled “Local browser randomness · not RANDOM.ORG.” Tests inject
-deterministic streams and failing providers. No RANDOM.ORG connection exists.
+The browser sends only `{ side }` to `POST /api/generate`. The Node server owns the
+key, RANDOM.ORG transport, bit buffer, and generation. The browser controller injects
+a generation function, commits only successful results, and performs no generation
+at startup. The server rejects simultaneous generation requests rather than creating
+an unbounded queue. All tabs share one buffer in that server process.
 
-For `n > 1`, selection computes `limit = 2^32 - (2^32 mod n)`, rejects values
-`>= limit`, then returns `value mod n`. The accepted range contains an equal number
-of values for every result index. For example, `n = 3` rejects `4294967295`.
-For `n = 1`, selection returns immediately. A guard fails after 1024 consecutive
-rejections rather than hanging on a broken provider; it never substitutes a biased
-fallback value. Provider errors propagate so the controller retains the last result.
+Static serving uses an explicit allowlist. `.env`, server modules, Git metadata,
+and tests are never served. The listener binds to 127.0.0.1. Host, same-origin, JSON
+content type, and request-size checks protect the generation endpoint. No CORS
+permission is granted to unrelated sites. Application errors are deliberately mapped
+to safe messages; raw request bodies, API responses, keys, and transport errors are
+never logged or returned to the browser.
 
-## Future RANDOM.ORG milestone — plan, not implemented
+## Bit provider and unbiased selection
 
-1. Verify the current official API contract, quotas, response encoding, and allowed
-   block sizes before implementation. No endpoint or numeric API limit is assumed here.
-2. Add a buffered provider with the same `nextUint32()` contract. Fetch uniform
-   random bits/bytes in blocks, decode complete unsigned 32-bit words using a fixed
-   byte order, and consume each word once. Keep unused words for subsequent loadouts.
-   Block size and a refill threshold should minimize network calls within verified
-   API limits; serialize overlapping refills to prevent duplicates and wasted quota.
-3. Keep API credentials in a local server process, outside browser source and Git.
-   Expose only the minimum loopback endpoint the UI needs. Never embed keys in client
-   bundles, browser storage, logs, or repository data.
-4. Validate response structure and provenance; use request timeouts and explicit
-   quota/network errors. Do not silently fall back to local randomness while retaining
-   a RANDOM.ORG label. A failed/incomplete refill must not expose partial state.
-5. Keep unbiased rejection sampling in `selection.js`, above the buffer. Retain
-   tests for rejection boundaries and add buffer exhaustion, partial blocks,
-   concurrent refill, timeout, quota, and provenance tests. Inject stub API responses.
+`BitBuffer` implements `async nextBits(k)` for 1 through 32 bits. It reads each byte
+in order, most significant bit first. It serializes overlapping reads, fetches only
+when empty, retains partial bytes, and can span blocks. Every read advances a
+forward-only cursor. Rejected patterns, bits used by a failed generation, and bits
+in an incomplete read are consumed permanently. No state is rolled back. A failed
+refill installs no partial block.
 
-In-memory buffering is the default plan. Persistent caching needs a separate design
-for atomic consumption, crash recovery, and preventing accidental reuse of random
-words. The current loopback server only serves static application files.
+For n choices, `choose` returns immediately if n = 1. Otherwise it asks for
+k = ceil(log2(n)) bits, giving an integer uniformly distributed in [0, 2^k).
+It accepts values below n and discards all others. Each accepted index has exactly
+one bit pattern, so conditioning on acceptance is uniform. Repeating after rejection
+preserves that distribution. This uses only the necessary bits instead of spending
+32 bits for a two-choice decision. A 1024-rejection guard fails rather than hanging
+on a broken source; it never substitutes a fallback. Empty attachment slots consume
+nothing, as do single-option equipment and attachment choices.
+
+The provider-independent generator and compatibility resolver remain shared pure
+domain modules. Successful server results add `randomness` metadata: source,
+method, and bits consumed. If a future dataset has a completely fixed loadout, the
+source is `none-required`, not RANDOM.ORG. The UI's label describes the currently
+displayed result and remains correct after a later failed attempt.
+
+## RANDOM.ORG transport
+
+Implemented against the official Release 4 documentation reviewed November 3, 2026:
+
+- [Basic API / generateBlobs](https://api.random.org/json-rpc/4/basic#generateBlobs)
+- [Transport fundamentals](https://api.random.org/json-rpc/4/fundamentals)
+- [Error codes](https://api.random.org/json-rpc/4/error-codes)
+- [API key management](https://api.random.org/api-keys)
+
+The server POSTs JSON-RPC 2.0 to `https://api.random.org/json-rpc/4/invoke`, using
+`generateBlobs`, `n: 1`, `size: 8192` bits (1 KiB), and `format: 'hex'`. It deliberately
+omits `pregeneratedRandomization` so historical deterministic replay is not requested.
+The block size is our application default, within the documented API bounds.
+
+The transport validates the RPC version and request ID, mutually exclusive
+result/error, usage metadata, exact blob length, and hexadecimal encoding. It does
+not accept a zero-bits-used result as fresh randomness. There is a 15-second timeout
+including response-body reading, a 64 KiB response limit, and no redirect following.
+
+The server's `advisoryDelay` sets the earliest allowed next refill. HTTP Retry-After
+(seconds or date) is also respected. While a delay is active, available buffered bits
+remain usable; an empty buffer returns an understandable retry message. Transient
+errors apply exponential cooldowns of 5, 10, 20, 40, then 60 seconds; a longer server
+delay takes precedence. The app makes no automatic retries, polling calls, startup
+calls, low-water prefetches, or `getUsage` requests.
+
+Known `bitsLeft` can reduce the next request to a whole-byte size. A remaining
+allowance smaller than 8 bits, or zero requests, blocks refills until the next UTC
+day. Quota errors update that state; a bit-quota error with a positive remaining
+allowance allows a smaller request on a later user retry. A stopped/invalid key or
+insufficient credit produces a specific safe error. Quotas are estimates; the API
+remains authoritative if another application also consumes the same key's allowance.
+Use a dedicated key and one server instance for this app.
+
+## Configuration and lifecycle
+
+`server/config.js` reads `RANDOM_ORG_API_KEY` from the process environment first,
+otherwise from project-root `.env`, using Node's built-in environment-file parser.
+The tracked `.env.example` contains no key. The existing ignore rules exclude `.env`.
+Keys are loaded once per process; restart after changing configuration. No key is
+accepted in a browser request, query string, or UI field.
+
+Buffers, quotas, and cooldowns live only in server memory. A browser reload does not
+refetch or rewind the server's bits. Restarting the server discards unused bits and
+resets local quota/delay estimates; avoid restarting to bypass a service delay.
+The next explicit generation fetches a fresh block. There is no persistent random
+cache and no retry of an uncertain completed request. On a timeout/disconnect, any
+bits the server already consumed remain consumed even if the browser gets no result.
+
+The Basic API's HTTPS origin and validated response determine the source label;
+there is no Signed API signature or independent certificate of authenticity.
+Fictional equipment remains clearly labeled separately from the random source.
+
+## Testing and review
+
+Tests inject fake fetch responses and synthetic bit streams; none use a live key,
+read the user's `.env`, or contact RANDOM.ORG. They enumerate small selection ranges
+to check equal mapping, exercise boundaries and consumption, simulate quota/delay
+and transport failures, and run the full controller-to-loopback-server-to-provider
+path with a failed refill. Additional HTTP checks verify private files and other
+origins cannot reach the key-backed service. See the README for Windows acceptance
+steps and the backup file list.

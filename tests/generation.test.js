@@ -4,11 +4,10 @@ import { mockDatabase } from '../src/data/mock-database.js';
 import { ATTACHMENT_SLOTS, availableOperators, resolveAttachments, validateDatabase } from '../src/domain/compatibility.js';
 import { generateLoadout } from '../src/domain/generate-loadout.js';
 import { choose } from '../src/random/selection.js';
-import { LocalRandomProvider } from '../src/random/local-provider.js';
 
 const copy = () => structuredClone(mockDatabase);
 function sequence(values) {
-  return { calls: 0, async nextUint32() { assert.ok(this.calls < values.length, 'unexpected random draw'); return values[this.calls++]; } };
+  return { calls: 0, async nextBits() { assert.ok(this.calls < values.length, 'unexpected random draw'); return values[this.calls++]; } };
 }
 
 test('fixture metadata explicitly identifies unverified mock data', () => {
@@ -45,26 +44,35 @@ test('singleton choices consume no randomness; empty choices fail explicitly', a
   await assert.rejects(() => choose([], provider), /No valid choices/);
 });
 
-test('rejection sampling discards the incomplete 32-bit tail before modulo', async () => {
-  const provider = sequence([0xffffffff, 0xfffffffe]);
+test('rejection sampling discards out-of-range bit patterns', async () => {
+  const provider = sequence([3, 2]);
   assert.equal(await choose(['a', 'b', 'c'], provider), 'c');
   assert.equal(provider.calls, 2);
-  assert.equal(await choose(['a', 'b', 'c', 'd'], sequence([0xffffffff])), 'd');
+  assert.equal(await choose(['a', 'b', 'c', 'd'], sequence([3])), 'd');
 });
 
-test('accepted values map to every index at bucket boundaries', async () => {
-  const choices = ['a', 'b', 'c'];
-  for (const value of [0, 1, 2, 3, 4, 5, 0xfffffffc, 0xfffffffd, 0xfffffffe]) {
-    assert.equal(await choose(choices, sequence([value])), choices[value % 3]);
+test('each accepted bit pattern maps once to each index for many range sizes', async () => {
+  for (let size = 2; size <= 65; size += 1) {
+    const choices = Array.from({ length: size }, (_, index) => index);
+    const counts = Array(size).fill(0);
+    const bits = Math.ceil(Math.log2(size));
+    for (let value = 0; value < 2 ** bits; value += 1) {
+      let calls = 0;
+      const provider = { async nextBits(count) { assert.equal(count, bits); return calls++ === 0 ? value : 0; } };
+      const result = await choose(choices, provider);
+      if (value < size) { counts[result] += 1; assert.equal(calls, 1); }
+      else { assert.equal(result, 0); assert.equal(calls, 2); }
+    }
+    assert.deepEqual(counts, Array(size).fill(1));
   }
 });
 
 test('invalid, failed, and repeatedly rejected provider values fail', async () => {
   for (const value of [-1, 2 ** 32, 0.5, NaN, undefined, '2']) {
-    await assert.rejects(() => choose([1, 2], sequence([value])), /invalid 32-bit/);
+    await assert.rejects(() => choose([1, 2], sequence([value])), /invalid bit/);
   }
-  await assert.rejects(() => choose([1, 2], { nextUint32() { throw new Error('offline'); } }), /offline/);
-  await assert.rejects(() => choose([1, 2, 3], { nextUint32: async () => 0xffffffff }), /rejection limit/);
+  await assert.rejects(() => choose([1, 2], { nextBits() { throw new Error('offline'); } }), /offline/);
+  await assert.rejects(() => choose([1, 2, 3], { nextBits: async () => 3 }), /rejection limit/);
 });
 
 test('a fully fixed loadout uses zero draws and preserves unavailable slots as null', async () => {
@@ -86,7 +94,7 @@ test('a fully fixed loadout uses zero draws and preserves unavailable slots as n
 
 test('generated choices stay within side, inventory, and resolved attachment restrictions', async () => {
   let seed = 123456789;
-  const provider = { async nextUint32() { seed ^= seed << 13; seed ^= seed >>> 17; seed ^= seed << 5; return seed >>> 0; } };
+  const provider = { async nextBits(bits) { seed ^= seed << 13; seed ^= seed >>> 17; seed ^= seed << 5; return (seed >>> 0) % (2 ** bits); } };
   const before = JSON.stringify(mockDatabase);
   const seen = new Set();
   for (const side of ['attack', 'defense']) {
@@ -143,11 +151,4 @@ test('invalid compatibility data is rejected before randomness is consumed', asy
     await assert.rejects(() => generateLoadout(db, 'attack', provider), /Invalid database/);
     assert.equal(provider.calls, 0);
   }
-});
-
-test('local provider supplies 32-bit values and labels the source honestly', async () => {
-  const provider = new LocalRandomProvider();
-  const value = await provider.nextUint32();
-  assert.ok(Number.isInteger(value) && value >= 0 && value < 2 ** 32);
-  assert.match(provider.label, /not RANDOM\.ORG/);
 });

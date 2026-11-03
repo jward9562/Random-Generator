@@ -2,8 +2,10 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { createController, SIDE_STORAGE_KEY } from '../src/ui/controller.js';
 import { mockDatabase } from '../src/data/mock-database.js';
+import { generateLoadout } from '../src/domain/generate-loadout.js';
 
-const options = { database: mockDatabase, provider: { nextUint32: async () => 0 } };
+const withProvider = provider => ({ generate: side => generateLoadout(mockDatabase, side, provider) });
+const options = withProvider({ nextBits: async () => 0 });
 function memoryStorage() {
   const entries = new Map();
   return { getItem: key => entries.get(key), setItem: (key, value) => entries.set(key, value) };
@@ -30,8 +32,8 @@ test('blocked browser storage does not prevent side changes or generation', asyn
 test('mid-generation failure keeps the entire previous result and allows retry', async () => {
   let calls = 0;
   let failAt = Infinity;
-  const provider = { async nextUint32() { if (++calls === failAt) throw new Error('test provider offline'); return 0; } };
-  const controller = createController({ ...options, provider });
+  const provider = { async nextBits() { if (++calls === failAt) throw new Error('test provider offline'); return 0; } };
+  const controller = createController(withProvider(provider));
   await controller.generateAll();
   const previous = controller.state.result;
   assert.ok(previous);
@@ -50,7 +52,7 @@ test('mid-generation failure keeps the entire previous result and allows retry',
 });
 
 test('first generation failure leaves no partial result', async () => {
-  const controller = createController({ ...options, provider: { async nextUint32() { throw new Error('unavailable'); } } });
+  const controller = createController(withProvider({ async nextBits() { throw new Error('unavailable'); } }));
   await controller.generateAll();
   assert.equal(controller.state.result, null);
   assert.equal(controller.state.busy, false);
@@ -70,4 +72,13 @@ test('pending requests block duplicate generation and side changes', async () =>
   complete({ side: 'attack' });
   await pending;
   assert.equal(controller.state.busy, false);
+});
+
+test('opening the app and changing sides never requests a loadout', () => {
+  let calls = 0;
+  const controller = createController({ generate: () => { calls += 1; } });
+  controller.selectSide('defense');
+  controller.selectSide('attack');
+  assert.equal(calls, 0);
+  assert.equal(controller.state.result, null);
 });
