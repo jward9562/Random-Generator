@@ -58,11 +58,13 @@ issues and an eligible operator list. Structural errors fail closed; incomplete,
 unverified, and patch-stale records are excluded. Dataset readiness is a separate gate.
 
 V2 category, weapon, and operator attachment layers support replacement and add/remove.
-Unknown (`null`) category slots can be completed by specific weapon replacements;
+Unknown (`null`) slots at any layer can be completed by specific replacements;
 unresolved slots never enter the pool. `[]` and `['none']` retain their v1 meanings.
 Attachments have named IDs and explicit slot types. Manual operator verification
-records patch, date, reviewer, evidence, and the list of weapons checked. It is a human
-assertion, not an automatic truth check or a fingerprint of same-patch content edits.
+records patch, date, reviewer, evidence, and the list of weapons checked. The pure
+`verification.js` module adds a canonical SHA-256 fingerprint of the operator and its
+dependencies. The validator excludes missing or mismatched fingerprints, including
+same-patch external edits. It remains a human assertion, not an automatic truth check.
 
 The existing domain generator uses the same compatibility entry points for v1 and v2.
 `availableOperators` derives the v2 pool from the inspector; validation runs before
@@ -70,6 +72,27 @@ randomness is consumed. The static server serves the new pure validation module 
 the existing browser compatibility module imports it. No data files, key files, or
 server modules are added to the public allowlist. The active app stays on v1 mock data;
 live real-data catalog delivery and labeling are deferred to a later activation milestone.
+
+## Local editor (milestone 3B)
+
+`editor/` is a separate interface; its editing model preserves unsaved drafts and
+cancels pending verification confirmations when dependencies change. Attachment
+forms use the v2 resolver for inherited/effective choices. Explicit confirmation is
+required before the store stamps a new verification fingerprint.
+
+`scripts/edit-database.mjs` binds port 4174 to loopback and fixes the workspace to
+`database/real/`. Optional `--practice` uses a fresh fictional copy under `.local/`
+on port 4175. A process lock prevents competing editor processes for one workspace.
+`server/editor-http.js` exposes only allowlisted assets and two JSON endpoints,
+with Host/Origin/content-type/size checks. It imports no RANDOM.ORG or key configuration.
+
+`server/editor-store.js` validates before saving, serializes reads/writes, rejects
+stale disk revisions and linked paths, and preserves existing IDs and filenames.
+It uses flushed temporary-file renames, backup transactions, and a recovery journal
+to roll back interrupted multi-file saves. External conflicts during recovery fail
+closed. External programs do not honor the editor lock, so concurrent external
+writes at the precise save instant remain outside its coordination guarantees.
+See [the editor guide](editor-guide.md) for recovery and first-version limits.
 
 ## Runtime boundary (milestone 2)
 

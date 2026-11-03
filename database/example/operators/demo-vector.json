@@ -2,12 +2,22 @@
   "id": "demo-vector",
   "name": "Fictional Vector",
   "side": "attack",
-  "primary": ["demo-shared-rifle"],
-  "secondary": ["demo-pistol"],
-  "gadgets": ["demo-smoke"],
+  "primary": [
+    "demo-shared-rifle"
+  ],
+  "secondary": [
+    "demo-pistol"
+  ],
+  "gadgets": [
+    "demo-smoke"
+  ],
   "attachmentOverrides": {
     "demo-shared-rifle": {
-      "optic": { "remove": ["demo-scope"] },
+      "optic": {
+        "remove": [
+          "demo-scope"
+        ]
+      },
       "underbarrel": []
     }
   },
@@ -16,8 +26,14 @@
     "patch": "FICTIONAL-PATCH-1",
     "checkedOn": "2026-11-03",
     "checkedBy": "Example reviewer (fictional)",
-    "evidence": ["Simulated check for documentation/tests only. Not verified Siege data."],
-    "weaponsChecked": ["demo-shared-rifle", "demo-pistol"]
+    "evidence": [
+      "Simulated check for documentation/tests only. Not verified Siege data."
+    ],
+    "weaponsChecked": [
+      "demo-shared-rifle",
+      "demo-pistol"
+    ],
+    "fingerprint": "sha256-v1:e9fedbf83016dbbfa560c1bdc5e665056eabb9fa00db247822f7494c0bec3d81"
   },
   "notes": "Entirely fictional example. Do not copy its verification into real records."
 }

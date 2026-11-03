@@ -26,3 +26,8 @@ coverage/
 
 # Local QA artifacts
 .local/
+
+# Local editor backups and crash-recovery state (never equipment source data)
+/database/real/.editor-backups/
+/database/real/.editor-recovery.json
+/database/real/.editor-session.lock

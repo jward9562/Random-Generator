@@ -1,4 +1,5 @@
 // Authoring schema v2. No network, filesystem, UI, or randomness dependencies.
+import { verificationIsCurrent } from './verification.js';
 export const EQUIPMENT_SLOTS = Object.freeze(['optic', 'barrel', 'grip', 'underbarrel']);
 const SLOTS = EQUIPMENT_SLOTS;
 const isObject = value => value !== null && typeof value === 'object' && !Array.isArray(value);
@@ -7,6 +8,7 @@ const stableId = value => typeof value === 'string' && /^[a-z0-9]+(?:-[a-z0-9]+)
 const own = (object, key) => Object.hasOwn(object, key);
 
 function applyOverride(base, change, path, report) {
+  if (change === null) return null; // An explicit unknown exception must not inherit.
   if (Array.isArray(change)) return [...change]; // Explicit replacement, including [].
   if (!isObject(change)) { report('error', 'INVALID_OVERRIDE', path, 'Use a replacement list or an object with add/remove lists.'); return null; }
   if (Object.keys(change).some(key => !['add', 'remove'].includes(key)) || !Object.keys(change).length) {
@@ -40,6 +42,13 @@ function resolve(db, operator, weaponId, report) {
     result[slot] = Array.isArray(value) ? [...value] : null;
   }
   return result;
+}
+
+// Draft-friendly preview: unknown slots stay null rather than becoming unavailable.
+export function previewAttachments(db, operator, weaponId) {
+  const issues = [];
+  const choices = resolve(db, operator, weaponId, (severity, code, path, message) => issues.push({ severity, code, path, message }));
+  return { choices, issues };
 }
 
 export function resolveV2Attachments(db, operator, weaponId) {
@@ -110,6 +119,7 @@ export function inspectEquipmentDatabase(db) {
     fields(value, SLOTS, path);
     for (const [slot, change] of Object.entries(value)) {
       if (!SLOTS.includes(slot)) continue;
+      if (change === null) continue;
       if (Array.isArray(change)) checkIds(change, catalogs.attachments, `${path}.${slot}`, { slot });
       else if (isObject(change)) {
         fields(change, ['add', 'remove'], `${path}.${slot}`);
@@ -185,12 +195,13 @@ export function inspectEquipmentDatabase(db) {
     for (const id of Array.isArray(op.gadgets) ? op.gadgets : []) if (!nonempty(catalogs.gadgets.get(id)?.name)) incomplete(`${path}.gadgets`, `Gadget ${id} needs a display name.`);
 
     const verification = op.verification;
-    fields(verification, ['status', 'patch', 'checkedOn', 'checkedBy', 'evidence', 'weaponsChecked'], `${path}.verification`);
+    fields(verification, ['status', 'patch', 'checkedOn', 'checkedBy', 'evidence', 'weaponsChecked', 'fingerprint'], `${path}.verification`);
     if (!isObject(verification) || !['draft', 'needs-review', 'verified'].includes(verification.status)) {
       incomplete(`${path}.verification.status`, 'Set draft, needs-review, or verified.');
     } else if (verification.status !== 'verified') {
       report('warning', 'UNVERIFIED', `${path}.verification.status`, 'This operator is excluded until manually verified.');
     } else {
+      if (!verificationIsCurrent(db, op)) report('warning', 'STALE_CONTENT', `${path}.verification.fingerprint`, 'Needs review: equipment or verification details changed, or this record has no content fingerprint. Recheck and confirm it in the editor.');
       if (!nonempty(version?.patch) || verification.patch !== version.patch) report('warning', 'STALE_PATCH', `${path}.verification.patch`, 'Manual verification must match the dataset target patch.');
       const date = verification.checkedOn;
       if (typeof date !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(date) || !Number.isFinite(Date.parse(date)) || new Date(date).toISOString().slice(0, 10) !== date) incomplete(`${path}.verification.checkedOn`, 'Enter the valid calendar date of the manual check (YYYY-MM-DD).');

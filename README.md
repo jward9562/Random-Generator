@@ -1,17 +1,23 @@
 # Siege Loadout Lab — local prototype
 
-Milestone 3A adds a verification-aware equipment-data foundation. The running app
+Milestone 3B adds a separate local graphical database editor. Double-click
+**Start-Editor.cmd** and open **http://127.0.0.1:4174**. To learn with fictional
+examples, use **Start-Editor-Practice.cmd** at **http://127.0.0.1:4175** instead.
+No new dependencies are needed. Read [the editor guide](docs/editor-guide.md)
+for the walkthrough, verification protection, saving, and recovery instructions.
+
+The running app
 still uses the original mock dataset and the same RANDOM.ORG workflow and design.
 Start with [the database editing guide](docs/database-guide.md). Double-click
 `Validate-Database.cmd` to check the empty real-data workspace without making API calls.
 Fictional worked examples live in `database/example/`; drafts belong in `database/real/`.
 
-Milestone 3A files to review in GitHub Desktop: `database/`, `Validate-Database.cmd`,
-`scripts/validate-data.mjs`, `server/equipment-files.js`, `src/domain/equipment-v2.js`,
-`tests/equipment-v2.test.js`, `docs/database-guide.md`, and the small updates to this
-README, `docs/architecture.md`, `src/domain/compatibility.js`, and the static module
-allowlist in `server/http-server.js` (with corresponding HTTP regression checks in
-`tests/http-server.test.js`). No real equipment was invented or activated.
+Milestone 3B files to review in GitHub Desktop: the two editor launch scripts,
+`scripts/edit-database.mjs`, `editor/`, `server/editor-store.js`,
+`server/editor-http.js`, `src/domain/verification.js`, and `tests/editor.test.js`.
+Updates also cover the v2 validator/tests, fictional example fingerprints, `.gitignore`,
+the guides, and one pure-module asset entry in `server/http-server.js`.
+No real equipment was invented or activated. `database/real/` remains unchanged.
 
 Milestone 2 integrates RANDOM.ORG with the existing interface. **Operators, weapons,
 gadgets, and compatibility remain fictional test fixtures; no Siege patch is verified.**

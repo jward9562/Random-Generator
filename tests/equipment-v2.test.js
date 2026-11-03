@@ -7,11 +7,13 @@ import { generateLoadout } from '../src/domain/generate-loadout.js';
 import { mockDatabase } from '../src/data/mock-database.js';
 import { fileURLToPath } from 'node:url';
 import { spawnSync } from 'node:child_process';
+import { verificationFingerprint } from '../src/domain/verification.js';
 
 const example = await loadEquipmentDirectory(fileURLToPath(new URL('../database/example', import.meta.url)));
 const copy = () => structuredClone(example);
 const operator = (db, id) => db.operators.find(op => op.id === id);
 const codes = db => inspectEquipmentDatabase(db).issues.map(issue => issue.code);
+const reviewAgain = db => { for (const op of db.operators) if (op.verification?.status === 'verified') op.verification.fingerprint = verificationFingerprint(db, op); };
 
 test('fictional v2 examples load; only complete patch-verified operators enter the pool', () => {
   const report = inspectEquipmentDatabase(example);
@@ -41,6 +43,7 @@ test('same-category weapons may have different attachment exceptions', () => {
   db.weapons.push({ id: 'demo-other-rifle', name: 'Other fictional rifle', category: 'demo-rifle-category', slot: 'primary', attachmentOverrides: { optic: ['none'], grip: [] } });
   op.primary.push('demo-other-rifle');
   op.verification.weaponsChecked.push('demo-other-rifle');
+  reviewAgain(db); // Simulate an explicit new manual check of the changed fixture.
   assert.deepEqual(resolveAttachments(db, op, 'demo-other-rifle').optic, ['none']);
   assert.deepEqual(resolveAttachments(db, op, 'demo-other-rifle').grip, []);
   assert.deepEqual(resolveAttachments(db, op, 'demo-shared-rifle').grip, ['none', 'demo-grip']);
@@ -50,6 +53,7 @@ test('same-category weapons may have different attachment exceptions', () => {
 test('operator additions can grant a known attachment absent from inherited choices', () => {
   const db = copy();
   operator(db, 'demo-vector').attachmentOverrides['demo-shared-rifle'].barrel = { add: ['demo-brake'] };
+  reviewAgain(db);
   assert.deepEqual(resolveAttachments(db, operator(db, 'demo-vector'), 'demo-shared-rifle').barrel, ['none', 'demo-suppressor', 'demo-brake']);
   assert.equal(availableOperators(db, 'attack').length, 1);
 });
@@ -63,6 +67,7 @@ test('null is unknown, [] is unavailable, and none is a real available choice', 
   assert.equal(availableOperators(db, 'attack').length, 0);
   assert.ok(codes(db).includes('INCOMPLETE'));
   db.weapons[0].attachmentOverrides.grip = ['none'];
+  reviewAgain(db);
   assert.equal(availableOperators(db, 'attack').length, 1, 'a complete weapon replacement can resolve an unknown category slot');
 });
 
@@ -103,6 +108,7 @@ test('dataset gate and patch changes prevent accidental promotion', async () => 
 test('real v2 pool contains only reviewed records and uses existing generation', async () => {
   const db = copy();
   db.dataVersion.kind = 'real';
+  reviewAgain(db);
   const result = await generateLoadout(db, 'attack', { nextBits: async () => 0 });
   assert.equal(result.operatorId, 'demo-vector');
   assert.deepEqual(result.dataVersion, db.dataVersion);
