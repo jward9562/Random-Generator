@@ -20,4 +20,9 @@ Desktop.ini
 # Local editor history
 .history/
 
-# Stack-specific dependency and build ignores will be added when a stack is chosen.
+# Optional Node tooling and generated reports
+node_modules/
+coverage/
+
+# Local QA artifacts
+.local/

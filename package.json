@@ -1,0 +1,9 @@
+{
+  "name": "siege-loadout-prototype",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Local-only loadout prototype with fictional compatibility fixtures",
+  "engines": { "node": ">=22" },
+  "scripts": { "start": "node scripts/serve.mjs", "test": "node --test" }
+}

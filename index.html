@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#10151d">
+  <title>Siege Loadout / Local Prototype</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="/styles.css">
+  <script type="module" src="/src/app.js"></script>
+</head>
+<body>
+  <main>
+    <header class="masthead">
+      <div><p class="eyebrow">RAINBOW SIX SIEGE / LOADOUT LAB</p><h1>Make the next round different.</h1></div>
+      <span class="badge">LOCAL PROTOTYPE <span aria-hidden="true">↗</span></span>
+    </header>
+    <aside class="mock-notice"><strong>MOCK DATA</strong><span>Fictional operators & equipment for testing. No Siege patch verified.</span></aside>
+    <section class="controls" aria-label="Loadout controls">
+      <div><p class="eyebrow" id="side-label">01 / CHOOSE YOUR SIDE</p>
+        <div class="side-selector" role="group" aria-labelledby="side-label">
+          <button type="button" id="attack" aria-pressed="true">Attack</button>
+          <button type="button" id="defense" aria-pressed="false">Defense</button>
+        </div>
+        <p id="operator-count" class="muted"></p>
+      </div>
+      <button type="button" id="generate" class="generate">Generate All <span aria-hidden="true">↻</span></button>
+    </section>
+    <div id="error" class="error" role="alert" hidden></div>
+    <div class="result-heading"><h2>Your loadout</h2><span id="result-side" class="badge">PREPARING</span></div>
+    <p id="status" class="status" role="status" aria-live="polite">Generating your first mock loadout…</p>
+    <section id="loadout" aria-label="Complete loadout" aria-busy="true">
+      <p class="placeholder">Your complete loadout will appear here.</p>
+    </section>
+    <footer><span id="random-source"></span><span id="data-version"></span></footer>
+    <noscript>This local prototype requires JavaScript enabled in your browser.</noscript>
+  </main>
+</body>
+</html>
