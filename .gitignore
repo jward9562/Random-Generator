@@ -1,0 +1,23 @@
+# Local secrets (keep example configuration trackable)
+.env
+.env.*
+!.env.example
+!.env.sample
+
+# Logs and temporary files
+*.log
+*.tmp
+*.temp
+*.swp
+*.swo
+*~
+
+# Windows Explorer metadata
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Local editor history
+.history/
+
+# Stack-specific dependency and build ignores will be added when a stack is chosen.
