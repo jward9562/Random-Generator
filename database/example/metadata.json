@@ -1,0 +1,9 @@
+{
+  "schemaVersion": 2,
+  "dataVersion": {
+    "id": "fictional-authoring-example-v1",
+    "kind": "mock",
+    "patch": "FICTIONAL-PATCH-1",
+    "status": "ready"
+  }
+}

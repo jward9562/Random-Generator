@@ -1,0 +1,19 @@
+[
+  {
+    "id": "demo-shared-rifle",
+    "name": "Fictional shared rifle",
+    "category": "demo-rifle-category",
+    "slot": "primary",
+    "attachmentOverrides": {
+      "optic": { "add": ["demo-scope"] },
+      "barrel": { "remove": ["demo-brake"], "add": ["demo-suppressor"] }
+    },
+    "notes": "Example only. Sharing a category does not establish actual compatibility."
+  },
+  {
+    "id": "demo-pistol",
+    "name": "Fictional sidearm",
+    "category": "demo-pistol-category",
+    "slot": "secondary"
+  }
+]

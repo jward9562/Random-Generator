@@ -1,9 +1,12 @@
-export const ATTACHMENT_SLOTS = Object.freeze(['optic', 'barrel', 'grip', 'underbarrel']);
+import { EQUIPMENT_SLOTS, assertValidEquipmentDatabase, resolveV2Attachments } from './equipment-v2.js';
+
+export const ATTACHMENT_SLOTS = EQUIPMENT_SLOTS;
 export const SIDES = Object.freeze(['attack', 'defense']);
 
 // Each override replaces the entire list for that slot. Missing keys inherit.
 // [] means the slot is unavailable; ['none'] means available with no attachment only.
 export function resolveAttachments(database, operator, weaponId) {
+  if (database.schemaVersion === 2) return resolveV2Attachments(database, operator, weaponId);
   const weapon = database.weapons[weaponId];
   if (!weapon || ![...operator.primary, ...operator.secondary].includes(weaponId)) {
     throw new Error('Weapon is not available to this operator.');
@@ -18,10 +21,13 @@ export function resolveAttachments(database, operator, weaponId) {
 
 export function availableOperators(database, side) {
   if (!SIDES.includes(side)) throw new Error('Choose attack or defense.');
+  if (database.schemaVersion === 2) return assertValidEquipmentDatabase(database).eligibleOperators.filter(operator => operator.side === side);
+  if (database.dataVersion?.kind !== 'mock') throw new Error('Invalid database: real data requires schema version 2 and per-operator verification.');
   return database.operators.filter(operator => operator.side === side);
 }
 
 export function validateDatabase(db) {
+  if (db?.schemaVersion === 2) { assertValidEquipmentDatabase(db); return db; }
   const assert = (condition, message) => { if (!condition) throw new Error(`Invalid database: ${message}`); };
   const owns = (object, id) => Object.hasOwn(object, id);
   const choices = (list, catalog, label, allowEmpty = false) => {
@@ -36,6 +42,7 @@ export function validateDatabase(db) {
     for (const [slot, ids] of Object.entries(value)) choices(ids, db.attachments, `${label}.${slot}`, true);
   };
   assert(db?.schemaVersion === 1, 'unsupported schema version');
+  assert(db.dataVersion?.kind === 'mock', 'real data requires schema version 2 and per-operator verification');
   assert(typeof db.dataVersion?.id === 'string' && db.dataVersion.id.length > 0, 'dataVersion.id is required');
   assert(['mock', 'verified'].includes(db.dataVersion.kind), 'dataVersion.kind is required');
   assert(db.dataVersion.kind === 'mock' ? db.dataVersion.verifiedPatch === null : typeof db.dataVersion.verifiedPatch === 'string' && db.dataVersion.verifiedPatch.trim().length > 0, 'verified patch must match data kind');

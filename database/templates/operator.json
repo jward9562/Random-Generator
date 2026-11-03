@@ -1,0 +1,18 @@
+{
+  "id": "replace-with-stable-operator-id",
+  "name": "Replace with the observed operator name",
+  "side": "attack",
+  "primary": null,
+  "secondary": null,
+  "gadgets": null,
+  "attachmentOverrides": {},
+  "verification": {
+    "status": "draft",
+    "patch": null,
+    "checkedOn": null,
+    "checkedBy": null,
+    "evidence": [],
+    "weaponsChecked": []
+  },
+  "notes": "Fill only from checked evidence. Null means unknown. Change side if needed."
+}

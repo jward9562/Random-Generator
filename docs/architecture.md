@@ -17,12 +17,12 @@ complete loadout (operators with larger inventories have more combinations).
 Only a complete result replaces the previous result. While pending, side changes
 and duplicate requests are blocked. Failure leaves the old result intact.
 
-## Database schema, version 1
+## Database schema, version 1 (active mock data)
 
 - `schemaVersion`: format version; currently 1.
 - `dataVersion`: `{ id, kind, verifiedPatch }`. Current ID is `mock-fixtures-v1`,
-  kind is `mock`, and verifiedPatch is `null`. Future `verified` data requires a
-  nonempty patch identifier; setting it must follow an actual data verification.
+  kind is `mock`, and verifiedPatch is `null`. Only mock data is supported in this
+  legacy format; real-data verification now requires schema version 2.
 - `attachments`: stable attachment IDs mapped to display names. The `none` entry
   represents an explicitly allowed choice to equip no attachment.
 - `categories`: complete default lists for `optic`, `barrel`, `grip`, and
@@ -47,6 +47,29 @@ dataset version. Display labels are looked up only at the UI boundary. The model
 currently assumes attachment slots are independent once operator and weapon are
 known. If verified game data introduces cross-slot exclusions or weapons usable
 in multiple equipment slots, extend the schema and tests before entering those cases.
+
+## Database schema, version 2 (preparation workspace)
+
+See [the editing guide](database-guide.md) for examples and exact field semantics.
+`server/equipment-files.js` combines catalog arrays and individual operator JSON files
+into a v2 dataset; duplicate JSON keys are rejected before use. Arrays retain duplicate
+IDs so `src/domain/equipment-v2.js` can report them. The inspector returns structured
+issues and an eligible operator list. Structural errors fail closed; incomplete,
+unverified, and patch-stale records are excluded. Dataset readiness is a separate gate.
+
+V2 category, weapon, and operator attachment layers support replacement and add/remove.
+Unknown (`null`) category slots can be completed by specific weapon replacements;
+unresolved slots never enter the pool. `[]` and `['none']` retain their v1 meanings.
+Attachments have named IDs and explicit slot types. Manual operator verification
+records patch, date, reviewer, evidence, and the list of weapons checked. It is a human
+assertion, not an automatic truth check or a fingerprint of same-patch content edits.
+
+The existing domain generator uses the same compatibility entry points for v1 and v2.
+`availableOperators` derives the v2 pool from the inspector; validation runs before
+randomness is consumed. The static server serves the new pure validation module because
+the existing browser compatibility module imports it. No data files, key files, or
+server modules are added to the public allowlist. The active app stays on v1 mock data;
+live real-data catalog delivery and labeling are deferred to a later activation milestone.
 
 ## Runtime boundary (milestone 2)
 

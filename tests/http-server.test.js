@@ -30,6 +30,11 @@ test('static pages never generate; private files and unrelated browser origins a
   const page = await fetch(base);
   assert.equal(page.status, 200);
   assert.match(page.headers.get('content-security-policy'), /connect-src 'self'/);
+  const validationModule = await fetch(base + '/src/domain/equipment-v2.js');
+  assert.equal(validationModule.status, 200);
+  assert.match(validationModule.headers.get('content-type'), /text\/javascript/);
+  assert.equal((await fetch(base + '/database/real/metadata.json')).status, 404);
+  assert.equal((await fetch(base + '/server/equipment-files.js')).status, 404);
   assert.equal(calls, 0);
   for (const path of ['/.env', '/.env.example', '/server/config.js', '/server/random-org-client.js', '/.git/config', '/src/random/local-provider.js', '/src/../server/config.js']) {
     assert.equal((await fetch(base + path)).status, 404, path);

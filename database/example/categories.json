@@ -1,0 +1,22 @@
+[
+  {
+    "id": "demo-rifle-category",
+    "name": "Fictional rifle defaults",
+    "attachments": {
+      "optic": ["none", "demo-dot"],
+      "barrel": ["none", "demo-brake"],
+      "grip": ["none", "demo-grip"],
+      "underbarrel": ["none", "demo-laser"]
+    }
+  },
+  {
+    "id": "demo-pistol-category",
+    "name": "Fictional pistol defaults",
+    "attachments": {
+      "optic": ["none"],
+      "barrel": ["none"],
+      "grip": [],
+      "underbarrel": []
+    }
+  }
+]

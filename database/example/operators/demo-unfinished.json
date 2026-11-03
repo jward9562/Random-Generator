@@ -1,0 +1,17 @@
+{
+  "id": "demo-unfinished",
+  "name": "Fictional unfinished operator",
+  "side": "attack",
+  "primary": null,
+  "secondary": null,
+  "gadgets": null,
+  "verification": {
+    "status": "draft",
+    "patch": null,
+    "checkedOn": null,
+    "checkedBy": null,
+    "evidence": [],
+    "weaponsChecked": []
+  },
+  "notes": "Intentionally incomplete. Validator reports warnings; never eligible."
+}

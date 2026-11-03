@@ -1,0 +1,23 @@
+{
+  "id": "demo-vector",
+  "name": "Fictional Vector",
+  "side": "attack",
+  "primary": ["demo-shared-rifle"],
+  "secondary": ["demo-pistol"],
+  "gadgets": ["demo-smoke"],
+  "attachmentOverrides": {
+    "demo-shared-rifle": {
+      "optic": { "remove": ["demo-scope"] },
+      "underbarrel": []
+    }
+  },
+  "verification": {
+    "status": "verified",
+    "patch": "FICTIONAL-PATCH-1",
+    "checkedOn": "2026-11-03",
+    "checkedBy": "Example reviewer (fictional)",
+    "evidence": ["Simulated check for documentation/tests only. Not verified Siege data."],
+    "weaponsChecked": ["demo-shared-rifle", "demo-pistol"]
+  },
+  "notes": "Entirely fictional example. Do not copy its verification into real records."
+}

@@ -6,6 +6,7 @@ import { PublicError } from './errors.js';
 const publicFiles = new Set([
   '/index.html', '/styles.css', '/src/app.js', '/src/data/mock-database.js',
   '/src/domain/compatibility.js', '/src/ui/controller.js', '/src/ui/remote-generator.js',
+  '/src/domain/equipment-v2.js',
 ]);
 const types = { '.html': 'text/html', '.css': 'text/css', '.js': 'text/javascript' };
 function json(res, status, body) {

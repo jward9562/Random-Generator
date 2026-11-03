@@ -1,0 +1,9 @@
+[
+  { "id": "none", "name": "No attachment", "slot": "any" },
+  { "id": "demo-dot", "name": "Fictional dot sight", "slot": "optic" },
+  { "id": "demo-scope", "name": "Fictional magnified sight", "slot": "optic" },
+  { "id": "demo-brake", "name": "Fictional muzzle brake", "slot": "barrel" },
+  { "id": "demo-suppressor", "name": "Fictional suppressor", "slot": "barrel" },
+  { "id": "demo-grip", "name": "Fictional vertical grip", "slot": "grip" },
+  { "id": "demo-laser", "name": "Fictional laser", "slot": "underbarrel" }
+]

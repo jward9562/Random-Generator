@@ -1,0 +1,23 @@
+{
+  "id": "demo-bastion",
+  "name": "Fictional Bastion",
+  "side": "defense",
+  "primary": ["demo-shared-rifle"],
+  "secondary": ["demo-pistol"],
+  "gadgets": ["demo-alarm"],
+  "attachmentOverrides": {
+    "demo-shared-rifle": {
+      "optic": ["demo-scope"],
+      "barrel": { "remove": ["demo-suppressor"] }
+    }
+  },
+  "verification": {
+    "status": "verified",
+    "patch": "FICTIONAL-PATCH-1",
+    "checkedOn": "2026-11-03",
+    "checkedBy": "Example reviewer (fictional)",
+    "evidence": ["Simulated check for documentation/tests only. Not verified Siege data."],
+    "weaponsChecked": ["demo-shared-rifle", "demo-pistol"]
+  },
+  "notes": "Same shared rifle as Vector, with different fictional operator restrictions."
+}

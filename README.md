@@ -1,5 +1,18 @@
 # Siege Loadout Lab — local prototype
 
+Milestone 3A adds a verification-aware equipment-data foundation. The running app
+still uses the original mock dataset and the same RANDOM.ORG workflow and design.
+Start with [the database editing guide](docs/database-guide.md). Double-click
+`Validate-Database.cmd` to check the empty real-data workspace without making API calls.
+Fictional worked examples live in `database/example/`; drafts belong in `database/real/`.
+
+Milestone 3A files to review in GitHub Desktop: `database/`, `Validate-Database.cmd`,
+`scripts/validate-data.mjs`, `server/equipment-files.js`, `src/domain/equipment-v2.js`,
+`tests/equipment-v2.test.js`, `docs/database-guide.md`, and the small updates to this
+README, `docs/architecture.md`, `src/domain/compatibility.js`, and the static module
+allowlist in `server/http-server.js` (with corresponding HTTP regression checks in
+`tests/http-server.test.js`). No real equipment was invented or activated.
+
 Milestone 2 integrates RANDOM.ORG with the existing interface. **Operators, weapons,
 gadgets, and compatibility remain fictional test fixtures; no Siege patch is verified.**
 Loadout selections now use RANDOM.ORG bits obtained by the local Node server. There
