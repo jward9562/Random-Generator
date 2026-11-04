@@ -197,10 +197,8 @@ test('JSON reader rejects duplicate properties including escaped spelling', () =
   assert.throws(() => parseEquipmentJson('{"id":}'), /invalid JSON/);
 });
 
-test('empty real workspace contains no invented equipment and no eligible operators', async () => {
-  const db = await loadEquipmentDirectory(fileURLToPath(new URL('../database/real', import.meta.url)));
-  assert.deepEqual(db.operators, []);
-  assert.deepEqual(db.weapons, []);
+test('an empty draft workspace has no eligible operators', () => {
+  const db = { schemaVersion: 2, dataVersion: { id: 'empty-draft', kind: 'real', patch: null, status: 'draft' }, attachments: [], categories: [], weapons: [], gadgets: [], operators: [] };
   assert.equal(inspectEquipmentDatabase(db).eligibleOperators.length, 0);
 });
 

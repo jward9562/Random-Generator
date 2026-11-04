@@ -70,8 +70,27 @@ The existing domain generator uses the same compatibility entry points for v1 an
 `availableOperators` derives the v2 pool from the inspector; validation runs before
 randomness is consumed. The static server serves the new pure validation module because
 the existing browser compatibility module imports it. No data files, key files, or
-server modules are added to the public allowlist. The active app stays on v1 mock data;
-live real-data catalog delivery and labeling are deferred to a later activation milestone.
+server modules are added to the public allowlist. Mock remains the default; milestone
+3D optionally loads the real v2 data on the server as described below.
+
+## Real-data preview (milestone 3D)
+
+`server/datasets.js` owns the fixed real-directory loader and a compact public dataset
+summary. `GET /api/datasets` reads/validates without drawing randomness. Draft,
+structural failure and empty-side gates run before generation can consume any bits.
+Fingerprints, per-operator completeness and patch matching remain the v2 validator's
+responsibility; the preview neither restamps nor edits equipment.
+
+`POST /api/generate` accepts `{ side, dataset: 'mock' | 'real' }`; omitting dataset
+keeps the old mock behavior. One loadout service and one bit buffer serve both modes.
+Every real request reloads and validates the files and rejects outstanding editor
+recovery journals. Results include dataset provenance and only the selected display
+names from that same snapshot. Raw catalogs and verification evidence stay private.
+
+The controller holds the selected mode independently of the previous successful
+result. Changing sides/modes never generates automatically. Result display labels
+are retained through failures and later dataset edits. Metadata reads cannot overwrite
+a newer generation summary. See [the preview guide](real-preview-guide.md).
 
 ## Local editor (milestone 3B)
 
@@ -96,7 +115,7 @@ See [the editor guide](editor-guide.md) for recovery and first-version limits.
 
 ## Runtime boundary (milestone 2)
 
-The browser sends only `{ side }` to `POST /api/generate`. The Node server owns the
+The browser sends `{ side, dataset }` to `POST /api/generate`. The Node server owns the
 key, RANDOM.ORG transport, bit buffer, and generation. The browser controller injects
 a generation function, commits only successful results, and performs no generation
 at startup. The server rejects simultaneous generation requests rather than creating

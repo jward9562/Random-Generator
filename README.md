@@ -1,15 +1,21 @@
 # Siege Loadout Lab — local prototype
 
+Milestone 3D adds an optional **Real-data preview** in the generator's Dataset menu.
+Launch with **Start-Prototype.cmd**, open **http://127.0.0.1:4173**, choose the preview,
+then press **Generate All**. Fictional mock remains the default. See the
+[real-preview testing guide](docs/real-preview-guide.md) for readiness rules,
+Sledge/Smoke checks, and the changed-file summary. No new dependencies are needed.
+
 Milestone 3B adds a separate local graphical database editor. Double-click
 **Start-Editor.cmd** and open **http://127.0.0.1:4174**. To learn with fictional
 examples, use **Start-Editor-Practice.cmd** at **http://127.0.0.1:4175** instead.
 No new dependencies are needed. Read [the editor guide](docs/editor-guide.md)
 for the walkthrough, verification protection, saving, and recovery instructions.
 
-The running app
-still uses the original mock dataset and the same RANDOM.ORG workflow and design.
+The running app preserves the original mock dataset, RANDOM.ORG workflow and design,
+with optional generation from the verified real database.
 Start with [the database editing guide](docs/database-guide.md). Double-click
-`Validate-Database.cmd` to check the empty real-data workspace without making API calls.
+`Validate-Database.cmd` to check the real-data workspace without making API calls.
 Fictional worked examples live in `database/example/`; drafts belong in `database/real/`.
 
 Milestone 3B files to review in GitHub Desktop: the two editor launch scripts,
@@ -17,10 +23,11 @@ Milestone 3B files to review in GitHub Desktop: the two editor launch scripts,
 `server/editor-http.js`, `src/domain/verification.js`, and `tests/editor.test.js`.
 Updates also cover the v2 validator/tests, fictional example fingerprints, `.gitignore`,
 the guides, and one pure-module asset entry in `server/http-server.js`.
-No real equipment was invented or activated. `database/real/` remains unchanged.
+Milestone 3B did not invent or activate real equipment. Milestone 3D reads your
+later verified records for the optional preview without changing `database/real/`.
 
-Milestone 2 integrates RANDOM.ORG with the existing interface. **Operators, weapons,
-gadgets, and compatibility remain fictional test fixtures; no Siege patch is verified.**
+Milestone 2 integrated RANDOM.ORG with the existing interface. **Fictional mock mode
+still uses test fixtures; real preview uses only your eligible verified records.**
 Loadout selections now use RANDOM.ORG bits obtained by the local Node server. There
 is no local/pseudorandom fallback. The page waits for **Generate All**.
 

@@ -2,9 +2,10 @@
 
 Milestone 3A introduced this preparation workspace; milestone 3B adds a
 [graphical editor](editor-guide.md) for ordinary data entry without JSON typing.
-This document remains the JSON format reference. **The running application still uses
-the original fictional mock database.** Its interface, RANDOM.ORG integration,
-and launch process are unchanged. No real Siege equipment has been entered or inferred.
+This document remains the JSON format reference. **Fictional mock remains the default.**
+Milestone 3D adds an optional [real-data preview](real-preview-guide.md) while preserving
+the RANDOM.ORG integration and launch process. Real records are manually entered and
+verified by the user, never inferred to fill gaps.
 
 ## Recommended editing approach
 
@@ -35,8 +36,8 @@ operators sharing a rifle and an unfinished operator. Its verification entries a
 **simulated examples only**, clearly marked as such. Never copy those verification
 claims into real data. `database/templates/operator.json` starts safely in draft mode.
 
-The real workspace is deliberately empty. Do not use fictional entries to fill it.
-`operators/.gitkeep` simply keeps its empty directory in Git; it is not data.
+The real workspace now contains the user's verified Sledge and Smoke records.
+Do not use fictional entries to fill gaps. `operators/.gitkeep`, if present, is not data.
 
 ## IDs and names
 
@@ -233,8 +234,8 @@ run the command again. Normal validation reports semantic issues together.
 
 The example intentionally includes an unfinished operator: normal validation succeeds
 with warnings and reports one eligible attacker and one defender; strict mode fails.
-The empty real workspace reports zero eligible operators. Neither command activates
-that workspace in the app or modifies files.
+An empty or Draft workspace reports zero eligible operators. These commands neither
+select real preview mode in the app nor modify files.
 
 ## Compatibility, activation, and backup
 
@@ -243,11 +244,10 @@ The existing schema-v1 **mock** dataset remains supported unchanged. A legacy gl
 must use version 2 with per-operator checks. The domain generator already accepts v2
 datasets returned by the file loader; tests exercise that path with fictional data.
 
-The running browser and server deliberately remain connected to the original mock
-dataset. Activating real data in the UI will be a separate milestone, with the correct
-labels and shared catalog delivery. Once activated, adding operators or equipment
+The running browser defaults to the original mock dataset. Use the Dataset menu's
+Real-data preview to generate from eligible real records. Adding operators or equipment
 uses these JSON files and the validator, not application logic. The separate local
-editor now maintains these files; a live dataset switch remains deferred.
+editor maintains the files; the generator reads them without changing verification.
 
 Back up `database/`, `docs/database-guide.md`, the validator command/script, the loader,
 validation module, tests, and small integration changes through GitHub Desktop.

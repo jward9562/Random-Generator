@@ -26,6 +26,12 @@ export function createAppServer({ service, root = new URL('../', import.meta.url
       const hosts = [`127.0.0.1:${port}`, `localhost:${port}`];
       if (!hosts.includes(req.headers.host)) throw new PublicError('HOST', 'Use the local application address.', 403);
       const path = new URL(req.url, `http://${req.headers.host}`).pathname;
+      if (path === '/api/datasets') {
+        if (req.method !== 'GET') throw new PublicError('METHOD', 'Use GET for dataset information.', 405);
+        if ((req.headers.origin && req.headers.origin !== `http://${req.headers.host}`) || (req.headers['sec-fetch-site'] && !['same-origin', 'none'].includes(req.headers['sec-fetch-site']))) throw new PublicError('ORIGIN', 'Open the application locally to view datasets.', 403);
+        json(res, 200, await service.describeDatasets());
+        return;
+      }
       if (path === '/api/generate') {
         if (req.method !== 'POST') throw new PublicError('METHOD', 'Use Generate All to request a loadout.', 405);
         if (req.headers.origin !== `http://${req.headers.host}` || (req.headers['sec-fetch-site'] && req.headers['sec-fetch-site'] !== 'same-origin')) {
@@ -39,8 +45,10 @@ export function createAppServer({ service, root = new URL('../', import.meta.url
         }
         let input;
         try { input = JSON.parse(body); } catch { throw new PublicError('BODY', 'The loadout request was invalid.', 400); }
-        if (!input || Object.keys(input).length !== 1 || !['attack', 'defense'].includes(input.side)) throw new PublicError('SIDE', 'Choose Attack or Defense.', 400);
-        const result = await service.generate(input.side);
+        if (!input || Object.keys(input).some(key => !['side', 'dataset'].includes(key)) || !['attack', 'defense'].includes(input.side)) throw new PublicError('SIDE', 'Choose Attack or Defense and a supported dataset.', 400);
+        const dataset = input.dataset === undefined ? 'mock' : input.dataset;
+        if (!['mock', 'real'].includes(dataset)) throw new PublicError('DATASET', 'Choose Fictional mock or Real-data preview.', 400);
+        const result = await service.generate(input.side, dataset);
         json(res, 200, { result });
         return;
       }
@@ -52,7 +60,7 @@ export function createAppServer({ service, root = new URL('../', import.meta.url
       res.end(req.method === 'HEAD' ? undefined : body);
     } catch (error) {
       const safe = error instanceof PublicError ? error : new PublicError('INTERNAL', 'The local server could not complete the loadout. Try again or restart the server.');
-      json(res, safe.status, { error: { code: safe.code, message: safe.message } });
+      json(res, safe.status, { error: { code: safe.code, message: safe.message }, ...(safe.dataset ? { dataset: safe.dataset } : {}) });
     }
   });
   server.requestTimeout = 20000;

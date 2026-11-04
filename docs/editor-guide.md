@@ -48,7 +48,8 @@ in-game check.
 
 Use the real editor for information you check yourself. Start with **Dataset**:
 enter your target patch and a revision name, keeping readiness set to Draft while
-collecting data. Ready does not activate this database in the generator.
+collecting data. Ready permits eligible records to generate only when you separately
+choose Real-data preview in the generator's Dataset menu. Mock remains the default.
 
 Use these sections in order when starting with empty catalogs:
 
@@ -96,8 +97,8 @@ operator automatically.
 
 Database checks also show structural errors, review notes, and the eligible count.
 A verified operator may still be outside the generation pool when the dataset is
-Draft or another structural error blocks the dataset. The real pool is not activated
-in the generator in this milestone.
+Draft or another structural error blocks the dataset. Milestone 3D offers an optional
+[real-data preview](real-preview-guide.md) using this eligible pool.
 
 After checking an operator in-game, enter reviewer, actual check date, patch, and
 evidence notes. Check the confirmation for each weapon's attachment menus and the
