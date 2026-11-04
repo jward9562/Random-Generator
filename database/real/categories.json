@@ -3,20 +3,63 @@
     "id": "assault-rifle",
     "name": "Assault Rifle",
     "attachments": {
-      "optic": null,
-      "barrel": null,
-      "grip": null,
-      "underbarrel": null
+      "optic": [
+        "magnified-a",
+        "magnified-b",
+        "magnified-c",
+        "red-dot-a",
+        "red-dot-b",
+        "red-dot-c",
+        "holo-a",
+        "holo-b",
+        "holo-c",
+        "holo-d",
+        "reflex-a",
+        "reflex-b",
+        "reflex-c",
+        "iron-sight"
+      ],
+      "barrel": [
+        "flash-hider",
+        "compensator",
+        "muzzle-brake",
+        "suppressor",
+        "none"
+      ],
+      "grip": [
+        "vertical-grip",
+        "angled-grip",
+        "horizontal-grip"
+      ],
+      "underbarrel": [
+        "laser",
+        "none"
+      ]
     }
   },
   {
     "id": "shotgun",
     "name": "Shotgun",
     "attachments": {
-      "optic": null,
-      "barrel": null,
-      "grip": null,
-      "underbarrel": null
+      "optic": [
+        "red-dot-a",
+        "red-dot-b",
+        "red-dot-c",
+        "holo-a",
+        "holo-b",
+        "holo-c",
+        "holo-d",
+        "reflex-a",
+        "reflex-b",
+        "reflex-c",
+        "iron-sight"
+      ],
+      "barrel": [],
+      "grip": [],
+      "underbarrel": [
+        "laser",
+        "none"
+      ]
     }
   },
   {
@@ -59,20 +102,87 @@
     "id": "pistol",
     "name": "Pistol",
     "attachments": {
-      "optic": null,
-      "barrel": null,
-      "grip": null,
-      "underbarrel": null
+      "optic": [],
+      "barrel": [
+        "muzzle-brake",
+        "suppressor",
+        "none"
+      ],
+      "grip": [],
+      "underbarrel": [
+        "laser",
+        "none"
+      ]
     }
   },
   {
     "id": "submachine-gun",
     "name": "Submachine Gun",
     "attachments": {
-      "optic": null,
-      "barrel": null,
-      "grip": null,
-      "underbarrel": null
+      "optic": [
+        "red-dot-a",
+        "red-dot-b",
+        "red-dot-c",
+        "holo-a",
+        "holo-b",
+        "holo-c",
+        "holo-d",
+        "reflex-a",
+        "reflex-b",
+        "reflex-c",
+        "iron-sight"
+      ],
+      "barrel": [
+        "flash-hider",
+        "compensator",
+        "muzzle-brake",
+        "suppressor",
+        "extended-barrel",
+        "none"
+      ],
+      "grip": [],
+      "underbarrel": [
+        "laser",
+        "none"
+      ]
+    }
+  },
+  {
+    "id": "marksman-rifle",
+    "name": "Marksman Rifle",
+    "attachments": {
+      "optic": [
+        "magnified-a",
+        "magnified-b",
+        "magnified-c",
+        "telescopic-a",
+        "telescopic-b",
+        "red-dot-a",
+        "red-dot-b",
+        "red-dot-c",
+        "holo-a",
+        "holo-b",
+        "holo-c",
+        "holo-d",
+        "reflex-a",
+        "reflex-b",
+        "reflex-c",
+        "iron-sight"
+      ],
+      "barrel": [
+        "muzzle-brake",
+        "suppressor",
+        "none"
+      ],
+      "grip": [
+        "vertical-grip",
+        "angled-grip",
+        "horizontal-grip"
+      ],
+      "underbarrel": [
+        "laser",
+        "none"
+      ]
     }
   }
 ]

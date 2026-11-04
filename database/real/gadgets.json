@@ -14,5 +14,21 @@
   {
     "id": "proximity-alarm",
     "name": "Proximity Alarm"
+  },
+  {
+    "id": "claymore",
+    "name": "Claymore"
+  },
+  {
+    "id": "breach-charge",
+    "name": "Breach Charge"
+  },
+  {
+    "id": "nitro-cell",
+    "name": "Nitro Cell"
+  },
+  {
+    "id": "bulletproof-camera",
+    "name": "Bulletproof Camera"
   }
 ]

@@ -1,10 +1,5 @@
 [
   {
-    "id": "none",
-    "name": "No attachment",
-    "slot": "any"
-  },
-  {
     "id": "magnified-a",
     "name": "Magnified A",
     "slot": "optic"
@@ -17,6 +12,16 @@
   {
     "id": "magnified-c",
     "name": "Magnified C",
+    "slot": "optic"
+  },
+  {
+    "id": "telescopic-a",
+    "name": "Telescopic A",
+    "slot": "optic"
+  },
+  {
+    "id": "telescopic-b",
+    "name": "Telescopic B",
     "slot": "optic"
   },
   {
@@ -118,5 +123,10 @@
     "id": "extended-barrel",
     "name": "Extended Barrel",
     "slot": "barrel"
+  },
+  {
+    "id": "none",
+    "name": "No attachment",
+    "slot": "any"
   }
 ]
