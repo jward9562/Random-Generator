@@ -1,0 +1,33 @@
+{
+  "id": "sledge",
+  "name": "Sledge",
+  "side": "attack",
+  "primary": [
+    "l85a2",
+    "m590a1"
+  ],
+  "secondary": [
+    "reaper-mk2",
+    "p226-mk-25"
+  ],
+  "gadgets": [
+    "frag-grenade",
+    "stun-grenade"
+  ],
+  "verification": {
+    "status": "verified",
+    "patch": "Y11S3.3",
+    "checkedBy": "jward9562",
+    "checkedOn": "2026-11-03",
+    "evidence": [
+      "checked both weapons and all gadget choices in operator selection"
+    ],
+    "weaponsChecked": [
+      "l85a2",
+      "m590a1",
+      "reaper-mk2",
+      "p226-mk-25"
+    ],
+    "fingerprint": "sha256-v1:95fde0323fe380951ddd449d94c5b5dd4f45cf38a9b2c2fac454e82629b00579"
+  }
+}

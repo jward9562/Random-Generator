@@ -1,1 +1,146 @@
-[]
+[
+  {
+    "id": "l85a2",
+    "name": "L85A2",
+    "category": "assault-rifle",
+    "slot": "primary",
+    "attachmentOverrides": {
+      "optic": [
+        "magnified-a",
+        "magnified-b",
+        "magnified-c",
+        "red-dot-a",
+        "red-dot-b",
+        "red-dot-c",
+        "holo-a",
+        "holo-b",
+        "holo-c",
+        "holo-d",
+        "reflex-a",
+        "reflex-b",
+        "reflex-c",
+        "iron-sight"
+      ],
+      "barrel": [
+        "flash-hider",
+        "compensator",
+        "muzzle-brake",
+        "suppressor",
+        "none"
+      ],
+      "grip": [
+        "vertical-grip",
+        "angled-grip",
+        "horizantal-grip"
+      ],
+      "underbarrel": [
+        "laser",
+        "none"
+      ]
+    }
+  },
+  {
+    "id": "m590a1",
+    "name": "M590A1",
+    "category": "shotgun",
+    "slot": "primary",
+    "attachmentOverrides": {
+      "optic": [
+        "red-dot-a",
+        "red-dot-b",
+        "red-dot-c",
+        "holo-a",
+        "holo-b",
+        "holo-c",
+        "holo-d",
+        "reflex-a",
+        "reflex-b",
+        "reflex-c",
+        "iron-sight"
+      ],
+      "barrel": [],
+      "grip": [],
+      "underbarrel": [
+        "laser",
+        "none"
+      ]
+    }
+  },
+  {
+    "id": "reaper-mk2",
+    "name": "Reaper MK2",
+    "category": "machine-pistol",
+    "slot": "secondary",
+    "attachmentOverrides": {
+      "optic": [],
+      "barrel": [
+        "flash-hider",
+        "compensator",
+        "muzzle-brake",
+        "suppressor",
+        "none"
+      ],
+      "grip": []
+    }
+  },
+  {
+    "id": "p226-mk-25",
+    "name": "P226 MK 25",
+    "category": "pistol",
+    "slot": "secondary",
+    "attachmentOverrides": {
+      "optic": [],
+      "barrel": [
+        "muzzle-brake",
+        "suppressor",
+        "none"
+      ],
+      "grip": [],
+      "underbarrel": [
+        "laser",
+        "none"
+      ]
+    }
+  },
+  {
+    "id": "fmg-9",
+    "name": "FMG-9",
+    "category": "submachine-gun",
+    "slot": "primary",
+    "attachmentOverrides": {
+      "optic": [
+        "red-dot-a",
+        "red-dot-b",
+        "red-dot-c",
+        "holo-a",
+        "holo-b",
+        "holo-c",
+        "holo-d",
+        "reflex-a",
+        "reflex-b",
+        "reflex-c",
+        "iron-sight"
+      ],
+      "barrel": [
+        "flash-hider",
+        "compensator",
+        "muzzle-brake",
+        "suppressor",
+        "extended-barrel",
+        "none"
+      ],
+      "grip": [],
+      "underbarrel": [
+        "laser",
+        "none"
+      ]
+    }
+  },
+  {
+    "id": "smg-11",
+    "name": "SMG-11",
+    "category": "machine-pistol",
+    "slot": "secondary",
+    "attachmentOverrides": {}
+  }
+]

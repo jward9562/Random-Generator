@@ -1,1 +1,18 @@
-[]
+[
+  {
+    "id": "frag-grenade",
+    "name": "Frag Grenade"
+  },
+  {
+    "id": "stun-grenade",
+    "name": "Stun Grenade"
+  },
+  {
+    "id": "barbed-wire",
+    "name": "Barbed Wire"
+  },
+  {
+    "id": "proximity-alarm",
+    "name": "Proximity Alarm"
+  }
+]

@@ -1,1 +1,78 @@
-[]
+[
+  {
+    "id": "assault-rifle",
+    "name": "Assault Rifle",
+    "attachments": {
+      "optic": null,
+      "barrel": null,
+      "grip": null,
+      "underbarrel": null
+    }
+  },
+  {
+    "id": "shotgun",
+    "name": "Shotgun",
+    "attachments": {
+      "optic": null,
+      "barrel": null,
+      "grip": null,
+      "underbarrel": null
+    }
+  },
+  {
+    "id": "machine-pistol",
+    "name": "Machine Pistol",
+    "attachments": {
+      "optic": [
+        "red-dot-a",
+        "red-dot-b",
+        "red-dot-c",
+        "holo-a",
+        "holo-b",
+        "holo-c",
+        "holo-d",
+        "reflex-a",
+        "reflex-b",
+        "reflex-c",
+        "iron-sight"
+      ],
+      "barrel": [
+        "flash-hider",
+        "compensator",
+        "muzzle-brake",
+        "suppressor",
+        "extended-barrel",
+        "none"
+      ],
+      "grip": [
+        "vertical-grip",
+        "angled-grip",
+        "horizantal-grip"
+      ],
+      "underbarrel": [
+        "laser",
+        "none"
+      ]
+    }
+  },
+  {
+    "id": "pistol",
+    "name": "Pistol",
+    "attachments": {
+      "optic": null,
+      "barrel": null,
+      "grip": null,
+      "underbarrel": null
+    }
+  },
+  {
+    "id": "submachine-gun",
+    "name": "Submachine Gun",
+    "attachments": {
+      "optic": null,
+      "barrel": null,
+      "grip": null,
+      "underbarrel": null
+    }
+  }
+]

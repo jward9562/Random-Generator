@@ -1,1 +1,122 @@
-[]
+[
+  {
+    "id": "none",
+    "name": "No attachment",
+    "slot": "any"
+  },
+  {
+    "id": "magnified-a",
+    "name": "Magnified A",
+    "slot": "optic"
+  },
+  {
+    "id": "magnified-b",
+    "name": "Magnified B",
+    "slot": "optic"
+  },
+  {
+    "id": "magnified-c",
+    "name": "Magnified C",
+    "slot": "optic"
+  },
+  {
+    "id": "red-dot-a",
+    "name": "Red Dot A",
+    "slot": "optic"
+  },
+  {
+    "id": "red-dot-b",
+    "name": "Red Dot B",
+    "slot": "optic"
+  },
+  {
+    "id": "red-dot-c",
+    "name": "Red Dot C",
+    "slot": "optic"
+  },
+  {
+    "id": "holo-a",
+    "name": "Holo A",
+    "slot": "optic"
+  },
+  {
+    "id": "holo-b",
+    "name": "Holo B",
+    "slot": "optic"
+  },
+  {
+    "id": "holo-c",
+    "name": "Holo C",
+    "slot": "optic"
+  },
+  {
+    "id": "holo-d",
+    "name": "Holo D",
+    "slot": "optic"
+  },
+  {
+    "id": "reflex-a",
+    "name": "Reflex A",
+    "slot": "optic"
+  },
+  {
+    "id": "reflex-b",
+    "name": "Reflex B",
+    "slot": "optic"
+  },
+  {
+    "id": "reflex-c",
+    "name": "Reflex C",
+    "slot": "optic"
+  },
+  {
+    "id": "iron-sight",
+    "name": "Iron Sight",
+    "slot": "optic"
+  },
+  {
+    "id": "flash-hider",
+    "name": "Flash Hider",
+    "slot": "barrel"
+  },
+  {
+    "id": "compensator",
+    "name": "Compensator",
+    "slot": "barrel"
+  },
+  {
+    "id": "muzzle-brake",
+    "name": "Muzzle Brake",
+    "slot": "barrel"
+  },
+  {
+    "id": "suppressor",
+    "name": "Suppressor",
+    "slot": "barrel"
+  },
+  {
+    "id": "vertical-grip",
+    "name": "Vertical Grip",
+    "slot": "grip"
+  },
+  {
+    "id": "angled-grip",
+    "name": "Angled Grip",
+    "slot": "grip"
+  },
+  {
+    "id": "horizantal-grip",
+    "name": "Horizantal Grip",
+    "slot": "grip"
+  },
+  {
+    "id": "laser",
+    "name": "Laser",
+    "slot": "underbarrel"
+  },
+  {
+    "id": "extended-barrel",
+    "name": "Extended Barrel",
+    "slot": "barrel"
+  }
+]
